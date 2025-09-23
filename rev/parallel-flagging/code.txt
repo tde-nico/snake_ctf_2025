@@ -1,0 +1,99 @@
+
+Fatbin elf code:
+================
+arch = sm_52
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_52
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_52
+code version = [8,3]
+host = linux
+compile_size = 64bit
+compressed
+
+
+
+
+
+
+
+
+.version 8.3
+.target sm_52
+.address_size 64
+
+
+.const .align 4 .b8 scramble_map[128] = {15, 0, 0, 0, 21, 0, 0, 0, 2, 0, 0, 0, 18, 0, 0, 0, 6, 0, 0, 0, 27, 0, 0, 0, 7, 0, 0, 0, 17, 0, 0, 0, 13, 0, 0, 0, 24, 0, 0, 0, 26, 0, 0, 0, 4, 0, 0, 0, 29, 0, 0, 0, 16, 0, 0, 0, 20, 0, 0, 0, 5, 0, 0, 0, 22, 0, 0, 0, 31, 0, 0, 0, 11, 0, 0, 0, 10, 0, 0, 0, 12, 0, 0, 0, 28, 0, 0, 0, 3, 0, 0, 0, 19, 0, 0, 0, 14, 0, 0, 0, 30, 0, 0, 0, 8, 0, 0, 0, 25, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 9};
+
+
+
+.visible .entry _Z6kernelPcS_(
+.param .u64 _Z6kernelPcS__param_0,
+.param .u64 _Z6kernelPcS__param_1
+)
+{
+.reg .b16 %rs<6>;
+.reg .b32 %r<22>;
+.reg .b64 %rd<12>;
+
+	.shared .align 1 .b8 _ZZ6kernelPcS_E10sharedData[32];
+
+	.shared .align 1 .b8 _ZZ6kernelPcS_E9scrambled[32];
+
+ld.param.u64 %rd1, [_Z6kernelPcS__param_0];
+ld.param.u64 %rd2, [_Z6kernelPcS__param_1];
+cvta.to.global.u64 %rd3, %rd2;
+cvta.to.global.u64 %rd4, %rd1;
+mov.u32 %r1, %ctaid.x;
+mov.u32 %r2, %ntid.x;
+mov.u32 %r3, %ctaid.y;
+mov.u32 %r4, %nctaid.x;
+mad.lo.s32 %r5, %r3, %r4, %r1;
+mov.u32 %r6, %ctaid.z;
+mul.lo.s32 %r7, %r6, %r4;
+mov.u32 %r8, %nctaid.y;
+mad.lo.s32 %r9, %r7, %r8, %r5;
+mov.u32 %r10, %tid.x;
+mad.lo.s32 %r11, %r9, %r2, %r10;
+cvt.s64.s32 %rd5, %r11;
+add.s64 %rd6, %rd4, %rd5;
+ld.global.u8 %rs1, [%rd6];
+mov.u32 %r12, _ZZ6kernelPcS_E10sharedData;
+add.s32 %r13, %r12, %r10;
+xor.b32 %r14, %r9, 1;
+add.s32 %r15, %r9, %r10;
+sub.s32 %r16, %r15, %r14;
+and.b32 %r17, %r16, 7;
+cvt.u64.u32 %rd7, %r17;
+add.s64 %rd8, %rd3, %rd7;
+ld.global.u8 %rs2, [%rd8];
+xor.b16 %rs3, %rs1, %rs2;
+st.shared.u8 [%r13], %rs3;
+bar.sync 0;
+mul.wide.u32 %rd9, %r10, 4;
+mov.u64 %rd10, scramble_map;
+add.s64 %rd11, %rd10, %rd9;
+ld.const.u32 %r18, [%rd11];
+add.s32 %r19, %r12, %r18;
+ld.shared.u8 %rs4, [%r19];
+mov.u32 %r20, _ZZ6kernelPcS_E9scrambled;
+add.s32 %r21, %r20, %r10;
+st.shared.u8 [%r21], %rs4;
+bar.sync 0;
+ld.shared.u8 %rs5, [%r21];
+st.global.u8 [%rd6], %rs5;
+ret;
+
+}
+
+
